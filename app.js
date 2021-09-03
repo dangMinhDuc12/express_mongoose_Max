@@ -1,0 +1,59 @@
+const express = require('express')
+const app = express()
+const methodOverride = require('method-override')
+const User = require('./models/user')
+const mongoose = require('mongoose')
+
+
+//Routes
+const adminRoutes = require('./routes/admin')
+const shopRoutes = require('./routes/shop')
+const path = require("path");
+
+
+app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, 'views'))
+app.use(methodOverride('_method'))
+
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+app.use(express.static(path.join(__dirname, 'public')))
+
+// Taọ middleware để mọi request tương ứng với user hiện tại
+app.use(async (req, res, next) => {
+    const userFind = await User.findById('6131a208e2cd35b4b55f336b')
+    req.user = userFind
+    next()
+})
+
+app.use('/admin',adminRoutes)
+app.use(shopRoutes)
+
+
+
+//404 not found page
+app.use((req, res, next) => {
+    res.status(404).render('404', {pageTitle: 'Page not found'})
+})
+
+;(async () => {
+    try {
+        await mongoose.connect('mongodb+srv://Duc_Dang:duc12121997@cluster0.sg8nb.mongodb.net/shop?retryWrites=true&w=majority')
+        console.log('connected to db')
+        const userFind = await User.findOne()
+        if(!userFind) {
+            const userCreate = new User({
+                name: 'Duc Dang',
+                email: 'ducdang@gmail.com',
+                cart: {
+                    items: []
+                }
+            })
+            await userCreate.save()
+        }
+        app.listen(3000)
+    } catch (e) {
+        console.log(e)
+    }
+
+})()

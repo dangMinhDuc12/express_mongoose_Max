@@ -1,0 +1,15 @@
+<%- include('../includes/header') %>
+</head>
+<body>
+<%- include('../includes/navigation') %>
+<main class="centered">
+    <h1><%= prod.title %></h1>
+    <hr>
+    <div>
+        <img src="<%= prod.imageURL %>">
+    </div>
+    <h2><%= prod.price %>mil €</h2>
+    <p><%= prod.description %></p>
+    <%- include('../includes/add-to-cart', { prod: prod }) %>
+</main>
+<%- include('../includes/footer') %>
