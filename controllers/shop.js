@@ -1,6 +1,5 @@
 const Product = require('../models/product')
-// const Cart = require('../models/cartSQL')
-// const Order = require('../models/orderSQL')
+const Order = require('../models/order')
 
 exports.getProducts = async (req, res, next) => {
     //sendFile: gửi 1 file đến đường dẫn bên trong hàm, dirname: folder hiện tại
@@ -43,7 +42,8 @@ exports.getIndex = async (req, res, next) => {
 
 exports.getCart = async (req, res, next) => {
 
-    const cartProducts = await req.user.getCart()
+    const userWithProduct = await req.user.populate('cart.items.productId')
+    const cartProducts = userWithProduct.cart.items
     res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
@@ -64,17 +64,9 @@ exports.deleteCartProduct = async (req, res, next) => {
     res.redirect('/cart')
 }
 
-//
-// exports.getCheckout = (req, res, next) => {
-//     res.render('shop/checkout', {
-//         path: '/checkout',
-//         pageTitle: 'Checkout'
-//     })
-// }
-//
 exports.getOrders = async (req, res, next) => {
     //Lệnh include: đưa các association cần vào xong query
-    const orders = await req.user.getOrders()
+    const orders = await Order.find({ userId: req.user._id })
     res.render('shop/orders', {
         path: '/orders',
         pageTitle: 'Your Orders',
@@ -83,6 +75,16 @@ exports.getOrders = async (req, res, next) => {
 }
 //
 exports.postOrders = async (req, res, next) => {
-    await req.user.addOrders()
+    const userWithCart = await req.user.populate('cart.items.productId')
+    const products = userWithCart.cart.items.map(item => ({
+        product: { ... item.productId } ,
+        quantity: item.quantity
+    }))
+    const order = new Order({
+        products,
+        userId: req.user._id
+    })
+    await order.save()
+    await req.user.clearCart()
     res.redirect('/orders')
 }
