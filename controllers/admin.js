@@ -6,7 +6,8 @@ exports.getAddProduct = (req, res, next) => {
         formsCSS: true,
         productCSS: true,
         activeAddProduct: true,
-        editing: false
+        editing: false,
+        isAuth: req.isAuth
     })
 }
 exports.getEditProduct = async (req, res, next) => {
@@ -21,7 +22,8 @@ exports.getEditProduct = async (req, res, next) => {
             pageTitle: 'Edit Product',
             path: '/admin/edit-product',
             editing: editMode,
-            prod: product
+            prod: product,
+            isAuth: req.isAuth
         })
 }
 
@@ -44,7 +46,8 @@ exports.getProducts = async (req, res, next) => {
             path: '/admin/products',
             hasProducts: products.length > 0,
             activeShop: true,
-            productCSS: true
+            productCSS: true,
+            isAuth: req.isAuth
         })
 }
 //

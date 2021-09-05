@@ -11,7 +11,8 @@ exports.getProducts = async (req, res, next) => {
              path: '/products',
              hasProducts: products.length > 0,
              activeShop: true,
-             productCSS: true
+             productCSS: true,
+             isAuth: req.isAuth
          })
 
 }
@@ -22,7 +23,8 @@ exports.getProduct = async (req, res, next) => {
     res.render('shop/product-detail', {
         prod: product,
         pageTitle: product.title,
-        path: '/products'
+        path: '/products',
+        isAuth: req.isAuth
     })
 }
 
@@ -35,7 +37,8 @@ exports.getIndex = async (req, res, next) => {
             path: '/',
             hasProducts: products.length > 0,
             activeShop: true,
-            productCSS: true
+            productCSS: true,
+            isAuth: req.isAuth
         })
 
 }
@@ -47,7 +50,8 @@ exports.getCart = async (req, res, next) => {
     res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
-        products: cartProducts
+        products: cartProducts,
+        isAuth: req.isAuth
     })
 }
 
@@ -70,7 +74,8 @@ exports.getOrders = async (req, res, next) => {
     res.render('shop/orders', {
         path: '/orders',
         pageTitle: 'Your Orders',
-        orders: orders
+        orders: orders,
+        isAuth: req.isAuth
     })
 }
 //
