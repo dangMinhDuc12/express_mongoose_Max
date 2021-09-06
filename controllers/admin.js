@@ -7,7 +7,7 @@ exports.getAddProduct = (req, res, next) => {
         productCSS: true,
         activeAddProduct: true,
         editing: false,
-        isAuth: req.isAuth
+        isAuth: req.session.isAuth
     })
 }
 exports.getEditProduct = async (req, res, next) => {
@@ -23,7 +23,7 @@ exports.getEditProduct = async (req, res, next) => {
             path: '/admin/edit-product',
             editing: editMode,
             prod: product,
-            isAuth: req.isAuth
+            isAuth: req.session.isAuth
         })
 }
 
@@ -47,7 +47,7 @@ exports.getProducts = async (req, res, next) => {
             hasProducts: products.length > 0,
             activeShop: true,
             productCSS: true,
-            isAuth: req.isAuth
+            isAuth: req.session.isAuth
         })
 }
 //

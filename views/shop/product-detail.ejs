@@ -10,6 +10,12 @@
     </div>
     <h2><%= prod.price %>mil €</h2>
     <p><%= prod.description %></p>
-    <%- include('../includes/add-to-cart', { prod: prod }) %>
+    <%
+    if (isAuth) {
+    %>
+        <%- include('../includes/add-to-cart', { prod: prod }) %>
+    <%
+    }
+    %>
 </main>
 <%- include('../includes/footer') %>

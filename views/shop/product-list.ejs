@@ -25,7 +25,13 @@
                     </div>
                     <div class="card__actions">
                         <a href="/products/<%= prod._id %>" class="btn">Details</a>
-                        <%- include('../includes/add-to-cart', { prod: prod }) %>
+                        <%
+                        if (isAuth) {
+                        %>
+                            <%- include('../includes/add-to-cart', { prod: prod }) %>
+                        <%
+                        }
+                        %>
                     </div>
                 </article>
                 <%

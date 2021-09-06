@@ -12,7 +12,7 @@ exports.getProducts = async (req, res, next) => {
              hasProducts: products.length > 0,
              activeShop: true,
              productCSS: true,
-             isAuth: req.isAuth
+             isAuth: req.session.isAuth
          })
 
 }
@@ -24,12 +24,13 @@ exports.getProduct = async (req, res, next) => {
         prod: product,
         pageTitle: product.title,
         path: '/products',
-        isAuth: req.isAuth
+        isAuth: req.session.isAuth
     })
 }
 
 
 exports.getIndex = async (req, res, next) => {
+    console.log('index', req.session.isAuth)
     const products = await Product.find({})
         res.render('shop/index', {
             prods: products,
@@ -38,7 +39,7 @@ exports.getIndex = async (req, res, next) => {
             hasProducts: products.length > 0,
             activeShop: true,
             productCSS: true,
-            isAuth: req.isAuth
+            isAuth: req.session.isAuth
         })
 
 }
@@ -51,7 +52,7 @@ exports.getCart = async (req, res, next) => {
         path: '/cart',
         pageTitle: 'Your Cart',
         products: cartProducts,
-        isAuth: req.isAuth
+        isAuth: req.session.isAuth
     })
 }
 
@@ -75,7 +76,7 @@ exports.getOrders = async (req, res, next) => {
         path: '/orders',
         pageTitle: 'Your Orders',
         orders: orders,
-        isAuth: req.isAuth
+        isAuth: req.session.isAuth
     })
 }
 //

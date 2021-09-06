@@ -36,12 +36,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static(path.join(__dirname, 'public')))
 
-// Taọ middleware để mọi request tương ứng với user hiện tại
-app.use(async (req, res, next) => {
-    const userFind = await User.findById('6131a208e2cd35b4b55f336b')
-    req.user = userFind
-    next()
-})
+
 
 app.use('/admin',adminRoutes)
 app.use(authRoutes)
