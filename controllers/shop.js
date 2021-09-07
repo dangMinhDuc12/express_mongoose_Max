@@ -30,7 +30,6 @@ exports.getProduct = async (req, res, next) => {
 
 
 exports.getIndex = async (req, res, next) => {
-    console.log('index', req.session.isAuth)
     const products = await Product.find({})
         res.render('shop/index', {
             prods: products,

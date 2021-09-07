@@ -36,6 +36,15 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use(async (req, res, next) => {
+    if (!req.session.user) {
+        return next()
+    }
+    const userLogin = await User.findById(req.session.user._id)
+    req.user = userLogin
+    next()
+})
+
 
 
 app.use('/admin',adminRoutes)
@@ -53,17 +62,6 @@ app.use((req, res, next) => {
     try {
         await mongoose.connect(process.env.MONGODB_URI)
         console.log('connected to db')
-        const userFind = await User.findOne()
-        if(!userFind) {
-            const userCreate = new User({
-                name: 'Duc Dang',
-                email: 'ducdang@gmail.com',
-                cart: {
-                    items: []
-                }
-            })
-            await userCreate.save()
-        }
         app.listen(3000)
     } catch (e) {
         console.log(e)

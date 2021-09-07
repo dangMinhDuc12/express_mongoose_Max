@@ -52,6 +52,15 @@ form {
   padding: 0;
 }
 
+.main-header__item button {
+  border: none;
+  background-color: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+
 .main-header__item a {
   text-decoration: none;
   color: white;
@@ -59,7 +68,8 @@ form {
 
 .main-header__item a:hover,
 .main-header__item a:active,
-.main-header__item a.active {
+.main-header__item a.active,
+.main-header__item button:hover {
   color: #ffeb3b;
 }
 
@@ -93,6 +103,8 @@ form {
   margin: 1rem;
   padding: 0;
 }
+
+
 
 .mobile-nav__item a {
   text-decoration: none;
