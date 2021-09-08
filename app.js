@@ -1,3 +1,5 @@
+
+//Import package
 const express = require('express')
 const app = express()
 const methodOverride = require('method-override')
@@ -7,6 +9,12 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
 const dotenv = require('dotenv')
+const csrf = require('csurf')
+const csrfProtection = csrf()
+const flash = require('connect-flash')
+
+
+
 dotenv.config()
 
 const store = new MongoDBStore({
@@ -14,13 +22,14 @@ const store = new MongoDBStore({
     collection: 'sessions'
 })
 
-//Routes
+//import routes
 const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
 const authRoutes = require('./routes/auth')
 const path = require("path");
 
 
+//Config app & use middleware
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 app.use(methodOverride('_method'))
@@ -36,6 +45,10 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static(path.join(__dirname, 'public')))
 
+//Để sau cookieparser và session
+app.use(csrfProtection)
+app.use(flash())
+
 app.use(async (req, res, next) => {
     if (!req.session.user) {
         return next()
@@ -45,7 +58,10 @@ app.use(async (req, res, next) => {
     next()
 })
 
-
+app.use((req, res, next) => {
+    res.locals.csrfToken = req.csrfToken()
+    next()
+})
 
 app.use('/admin',adminRoutes)
 app.use(authRoutes)
@@ -58,6 +74,8 @@ app.use((req, res, next) => {
     res.status(404).render('404', {pageTitle: 'Page not found'})
 })
 
+
+//run server
 ;(async () => {
     try {
         await mongoose.connect(process.env.MONGODB_URI)
