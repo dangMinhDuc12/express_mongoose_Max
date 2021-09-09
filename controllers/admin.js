@@ -39,7 +39,7 @@ exports.addProduct = async (req, res, next) => {
 exports.getProducts = async (req, res, next) => {
 
     //relationship
-    const products = await Product.find({})
+    const products = await Product.find({ userId: req.user._id })
         res.render('admin/products', {
             prods: products,
             pageTitle: 'Admin Products',
@@ -54,12 +54,12 @@ exports.getProducts = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
     const { productId } = req.params
     const { title, imageURL, description, price } = req.body
-    await Product.updateOne({ _id: productId }, { title, imageURL, description, price })
+    await Product.updateOne({ _id: productId, userId: req.user._id }, { title, imageURL, description, price })
     res.redirect('/')
 }
 //
 exports.deleteProduct = async (req, res, next) => {
     const { productId } = req.params
-    await Product.findByIdAndDelete(productId)
+    await Product.deleteOne({ _id: productId, userId: req.user._id })
     res.redirect('/admin/products')
 }

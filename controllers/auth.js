@@ -1,6 +1,7 @@
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const mailer = require('../ulti/mailer')
+const crypto = require('crypto')
 
 module.exports.getLogin = (req, res, next) => {
     const messages = req.flash('errMsg')
@@ -85,5 +86,87 @@ module.exports.postSignup = async (req, res, next) => {
     })
     await createUser.save()
     await mailer.sendMail('dangminhduca3@gmail.com', 'Signup Success', '<h1>You successfully signed up</h1>')
+    res.redirect('/login')
+}
+
+module.exports.getReset = (req, res, next) => {
+    const messages = req.flash('errMsg')
+    let errMsg = null
+    if (messages.length) {
+        errMsg = messages[0]
+    } else {
+        errMsg = null
+    }
+    res.render('auth/reset', {
+        path: '/reset',
+        pageTitle: 'Reset Password',
+        isAuth: false,
+        errMsg
+    })
+
+}
+
+module.exports.postReset = (req, res, next) => {
+    const { email } = req.body
+    crypto.randomBytes(32, async (err, buffer) => {
+        if (err) {
+            console.log(err)
+            return res.redirect('/reset')
+        }
+        const token = buffer.toString('hex')
+        const userWithEmail = await User.findOne({ email })
+        if (!userWithEmail) {
+            req.flash('errMsg', 'User does not exist')
+            return req.session.save((err) => {
+                res.redirect('/reset')
+            })
+        }
+        userWithEmail.resetToken = token
+        userWithEmail.resetTokenExpiration = Date.now() + 3600000
+        await userWithEmail.save()
+        await mailer.sendMail(email, 'Password Reset', `
+            <p>You requested a password reset</p>
+            <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password</p>
+        `)
+        res.redirect('/')
+    })
+
+}
+
+module.exports.getNewPassword = async (req, res, next) => {
+    const { resetToken } = req.params
+    const userWithToken = await User.findOne({ resetToken, resetTokenExpiration: { $gt: Date.now() } })
+    if (!userWithToken) {
+        req.flash('errMsg', 'Cannot find user')
+        return req.session.save((err) => {
+            res.redirect('/reset')
+        })
+    }
+    const messages = req.flash('errMsg')
+    let errMsg = null
+    if (messages.length) {
+        errMsg = messages[0]
+    } else {
+        errMsg = null
+    }
+    res.render('auth/new-password', {
+        path: '/new-password',
+        pageTitle: 'New Password',
+        isAuth: false,
+        errMsg,
+        userId: userWithToken._id.toString(),
+        resetToken
+    })
+}
+
+module.exports.postNewPassword = async (req, res, next) => {
+    const { userId, resetToken, password } = req.body
+    const newHashPassword = await bcrypt.hash(password, 12)
+    const userWithNewPw = await User.findOne({ _id: userId, resetToken, resetTokenExpiration: { $gt: Date.now() } })
+    userWithNewPw.password = newHashPassword
+    userWithNewPw.resetToken = undefined
+    userWithNewPw.resetTokenExpiration = undefined
+    await userWithNewPw.save()
+
     res.redirect('/login')
 }

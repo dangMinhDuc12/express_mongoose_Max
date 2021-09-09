@@ -60,6 +60,9 @@ app.use(async (req, res, next) => {
 
 app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken()
+    if (req.user) {
+        res.locals.userLoginName = req.user.email
+    }
     next()
 })
 
