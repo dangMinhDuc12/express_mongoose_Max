@@ -2,6 +2,7 @@ const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const mailer = require('../ulti/mailer')
 const crypto = require('crypto')
+const { validationResult } = require('express-validator')
 
 module.exports.getLogin = (req, res, next) => {
     const messages = req.flash('errMsg')
@@ -15,12 +16,30 @@ module.exports.getLogin = (req, res, next) => {
         path: '/login',
         pageTitle: 'Login',
         isAuth: false,
-        errMsg
+        errMsg,
+        oldInput: {
+            email: '',
+            password: ''
+        }
     })
 }
 
 module.exports.postLogin = async (req, res, next) => {
     const { email, password } = req.body
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        const errMsg = errors.array()[0].msg
+        return res.status(422).render('auth/login', {
+            path: '/login',
+            pageTitle: 'Login',
+            isAuth: false,
+            errMsg,
+            oldInput: {
+                email,
+                password
+            }
+        })
+    }
     const userLogin = await User.findOne({ email })
     if (!userLogin) {
         req.flash('errMsg', 'Invalid email')
@@ -63,17 +82,30 @@ module.exports.signup = (req, res, next) => {
         path: '/signup',
         pageTitle: 'Signup',
         isAuth: false,
-        errMsg
+        errMsg,
+        oldInput: {
+            email: '',
+            password: '',
+            confirmPassword: ''
+        }
     })
 }
 
 module.exports.postSignup = async (req, res, next) => {
     const { email, password, confirmPassword } = req.body
-    const checkUser = await User.findOne({ email })
-    if (checkUser) {
-        req.flash('errMsg', 'User existed')
-        return req.session.save((err) => {
-             res.redirect('/signup')
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        const errMsg = errors.array()[0].msg
+        return res.status(422).render('auth/signup', {
+            path: '/signup',
+            pageTitle: 'Signup',
+            isAuth: false,
+            errMsg,
+            oldInput: {
+                email,
+                password,
+                confirmPassword
+            }
         })
     }
     const hashPassword = await bcrypt.hash(password, 12)
@@ -85,7 +117,7 @@ module.exports.postSignup = async (req, res, next) => {
         }
     })
     await createUser.save()
-    await mailer.sendMail('dangminhduca3@gmail.com', 'Signup Success', '<h1>You successfully signed up</h1>')
+    await mailer.sendMail(email, 'Signup Success', '<h1>You successfully signed up</h1>')
     res.redirect('/login')
 }
 

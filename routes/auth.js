@@ -1,16 +1,41 @@
 const express = require('express')
 const router = express.Router()
 const authController = require('../controllers/auth')
+const { check, body } = require('express-validator')
+
+const User = require('../models/user')
 
 router.get('/login', authController.getLogin)
 
-router.post('/login', authController.postLogin)
+router.post('/login',
+    check('email')
+        .isEmail()
+        .withMessage('Please enter valid email'),
+    body('password', 'Please enter a password with only numbers and text and at least 5 characters').isLength({ min:5 }).isAlphanumeric()
+
+    ,authController.postLogin)
 
 router.post('/logout', authController.logout)
 
 router.get('/signup', authController.signup)
 
-router.post('/signup', authController.postSignup)
+router.post('/signup',
+    check('email').
+    isEmail().
+    withMessage('Please enter valid email').custom( async (value, { req }) => {
+        const userFind = await User.findOne( { email: value })
+        if (userFind) {
+            return Promise.reject('E-mail already in use')
+        }
+    }),
+    body('password', 'Please enter a password with only numbers and text and at least 5 characters').isLength({ min:5 }).isAlphanumeric(),
+    body('confirmPassword').custom((value, { req }) => {
+        if (value !== req.body.password) {
+            throw new Error('Password have to match')
+        }
+        return true
+    })
+    , authController.postSignup)
 
 router.get('/reset', authController.getReset)
 
