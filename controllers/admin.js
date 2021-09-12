@@ -1,4 +1,6 @@
 const Product = require("../models/product");
+const { validationResult } = require('express-validator')
+
 exports.getAddProduct = (req, res, next) => {
     res.render('admin/edit-product', {
         pageTitle: 'Add Product',
@@ -7,7 +9,10 @@ exports.getAddProduct = (req, res, next) => {
         productCSS: true,
         activeAddProduct: true,
         editing: false,
-        isAuth: req.session.isAuth
+        hasError: false,
+        isAuth: req.session.isAuth,
+        errMsg: null,
+        validErrors: []
     })
 }
 exports.getEditProduct = async (req, res, next) => {
@@ -23,14 +28,35 @@ exports.getEditProduct = async (req, res, next) => {
             path: '/admin/edit-product',
             editing: editMode,
             prod: product,
-            isAuth: req.session.isAuth
+            isAuth: req.session.isAuth,
+            hasError: false,
+            errMsg: null,
+            validErrors: []
         })
 }
 
 
 
 exports.addProduct = async (req, res, next) => {
+    const errors = validationResult(req)
     const { title, imageURL, description, price } = req.body
+    if (!errors.isEmpty()) {
+        return  res.render('admin/edit-product', {
+            pageTitle: 'Edit Product',
+            path: '/admin/add-product',
+            editing: false,
+            hasError: true,
+            prod: {
+                title,
+                imageURL,
+                description,
+                price
+            },
+            isAuth: req.session.isAuth,
+            errMsg: errors.array()[0].msg,
+            validErrors: errors.array()
+        })
+    }
     const product = new Product({ title, imageURL, description, price, userId: req.user._id })
     await product.save()
     res.redirect('/')
@@ -53,7 +79,26 @@ exports.getProducts = async (req, res, next) => {
 //
 exports.updateProduct = async (req, res, next) => {
     const { productId } = req.params
+    const errors = validationResult(req)
     const { title, imageURL, description, price } = req.body
+    if (!errors.isEmpty()) {
+        return  res.render('admin/edit-product', {
+            pageTitle: 'Edit Product',
+            path: '/admin/edit-product',
+            editing: true,
+            hasError: true,
+            prod: {
+                title,
+                imageURL,
+                description,
+                price,
+                _id: productId
+            },
+            isAuth: req.session.isAuth,
+            errMsg: errors.array()[0].msg,
+            validErrors: errors.array()
+        })
+    }
     await Product.updateOne({ _id: productId, userId: req.user._id }, { title, imageURL, description, price })
     res.redirect('/')
 }

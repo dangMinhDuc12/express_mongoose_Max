@@ -20,7 +20,8 @@ module.exports.getLogin = (req, res, next) => {
         oldInput: {
             email: '',
             password: ''
-        }
+        },
+        validErrors: []
     })
 }
 
@@ -37,7 +38,8 @@ module.exports.postLogin = async (req, res, next) => {
             oldInput: {
                 email,
                 password
-            }
+            },
+            validErrors: errors.array()
         })
     }
     const userLogin = await User.findOne({ email })
@@ -87,7 +89,8 @@ module.exports.signup = (req, res, next) => {
             email: '',
             password: '',
             confirmPassword: ''
-        }
+        },
+        validErrors: []
     })
 }
 
@@ -105,7 +108,8 @@ module.exports.postSignup = async (req, res, next) => {
                 email,
                 password,
                 confirmPassword
-            }
+            },
+            validErrors: errors.array()
         })
     }
     const hashPassword = await bcrypt.hash(password, 12)

@@ -50,12 +50,17 @@ app.use(csrfProtection)
 app.use(flash())
 
 app.use(async (req, res, next) => {
-    if (!req.session.user) {
-        return next()
+    try {
+        if (!req.session.user) {
+            return next()
+        }
+        const userLogin = await User.findById(req.session.user._id)
+        req.user = userLogin
+        next()
+    } catch (e) {
+        throw new Error(err)
     }
-    const userLogin = await User.findById(req.session.user._id)
-    req.user = userLogin
-    next()
+
 })
 
 app.use((req, res, next) => {

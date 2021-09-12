@@ -6,23 +6,30 @@
 <%- include('../includes/navigation') %>
 
 <main>
+    <%
+    if (errMsg) {
+    %>
+        <div class="user-message user-message--error"><%= errMsg %></div>
+    <%
+    }
+    %>
     <form class="product-form" action="/admin/<% if (editing) { %>edit-product/<%= prod._id %>?_method=PUT <%} else { %>add-product <% } %>" method="POST">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div class="form-control">
             <label for="title">Title</label>
-            <input type="text" name="title" id="title" value="<% if (editing) { %> <%= prod.title %> <% }%>">
+            <input class="<%= validErrors.find(e => e.param === 'title') ? 'invalid': '' %>" type="text" name="title" id="title" value="<% if (editing || hasError) { %><%= prod.title %><% }%>">
         </div>
         <div class="form-control">
             <label for="imageURL">Image URL</label>
-            <input type="text" name="imageURL" id="imageURL" value="<% if (editing) { %> <%= prod.imageURL %> <% }%>">
+            <input class="<%= validErrors.find(e => e.param === 'imageURL') ? 'invalid': '' %>" type="text" name="imageURL" id="imageURL" value="<% if (editing || hasError) { %><%= prod.imageURL %><% }%>">
         </div>
         <div class="form-control">
             <label for="description">Description</label>
-            <textarea name="description" id="description"  rows="5"><% if (editing) { %> <%= prod.description %> <% }%></textarea>
+            <textarea class="<%= validErrors.find(e => e.param === 'description') ? 'invalid': '' %>" name="description" id="description"  rows="5"><% if (editing || hasError) { %><%= prod.description %><% }%></textarea>
         </div>
         <div class="form-control">
             <label for="price">Price</label>
-            <input type="text" name="price" id="price" value="<% if (editing) { %> <%= prod.price %> <% }%>">
+            <input class="<%= validErrors.find(e => e.param === 'price') ? 'invalid': '' %>" type="text" name="price" id="price" value="<% if (editing || hasError) { %><%= prod.price %><% }%>">
         </div>
         <button type="submit">
             <%
