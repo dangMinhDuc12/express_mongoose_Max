@@ -12,7 +12,26 @@ const dotenv = require('dotenv')
 const csrf = require('csurf')
 const csrfProtection = csrf()
 const flash = require('connect-flash')
+const errController = require('./controllers/error')
+const multer = require('multer')
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images')
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, file.fieldname + '-' + uniqueSuffix)
+    }
+})
+
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+        cb(null, true)
+    } else {
+        cb(null, false)
+    }
+}
 
 
 dotenv.config()
@@ -45,6 +64,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static(path.join(__dirname, 'public')))
 
+app.use(multer({ storage, fileFilter }).single('imageURL') )
+
 //Để sau cookieparser và session
 app.use(csrfProtection)
 app.use(flash())
@@ -76,10 +97,15 @@ app.use(authRoutes)
 app.use(shopRoutes)
 
 
+//500
+app.get('/500', errController.get500)
 
 //404 not found page
-app.use((req, res, next) => {
-    res.status(404).render('404', {pageTitle: 'Page not found'})
+app.use(errController.get404)
+
+//Bất đồng bộ thì sẽ gọi next trong catch block thì sẽ lọt vào err middleware này để bắt lỗi, code đồng bộ sẽ gọi throw
+app.use((err, req, res, next) => {
+    res.redirect('/500')
 })
 
 

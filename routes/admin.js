@@ -11,7 +11,6 @@ router.get('/add-product', adminController.getAddProduct)
 // // /admin/add-product => POST
 router.post('/add-product',
     body('title').isString().isLength({ min: 3 }).trim(),
-    body('imageURL').isURL().trim(),
     body('price').isFloat().trim(),
     body('description').isLength({ min: 5, max: 500 }).trim()
     ,adminController.addProduct)
@@ -25,7 +24,6 @@ router.delete('/delete-product/:productId', adminController.deleteProduct)
 // //
 router.put('/edit-product/:productId',
     body('title').isString().isLength({ min: 3 }).trim(),
-    body('imageURL').isURL().trim(),
     body('price').isFloat().trim(),
     body('description').isLength({ min: 5, max: 500 }).trim(), adminController.updateProduct)
 
