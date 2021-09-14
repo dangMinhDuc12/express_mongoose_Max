@@ -1,6 +1,7 @@
 const Product = require("../models/product");
 const { validationResult } = require('express-validator')
 const mongoose = require('mongoose')
+const fileHelper = require('../ulti/file')
 
 exports.getAddProduct = (req, res, next) => {
     res.render('admin/edit-product', {
@@ -41,17 +42,31 @@ exports.getEditProduct = async (req, res, next) => {
 exports.addProduct = async (req, res, next) => {
     const errors = validationResult(req)
     const { title, description, price } = req.body
-    const imageURL = req.file
-    console.log(imageURL)
-    if (!errors.isEmpty()) {
+    const imageURL = req.file?.path
+    if (!imageURL) {
         return  res.render('admin/edit-product', {
-            pageTitle: 'Edit Product',
+            pageTitle: 'Add Product',
             path: '/admin/add-product',
             editing: false,
             hasError: true,
             prod: {
                 title,
-                imageURL,
+                description,
+                price
+            },
+            isAuth: req.session.isAuth,
+            errMsg: 'Attached file is not an image',
+            validErrors: errors.array()
+        })
+    }
+    if (!errors.isEmpty()) {
+        return  res.render('admin/edit-product', {
+            pageTitle: 'Add Product',
+            path: '/admin/add-product',
+            editing: false,
+            hasError: true,
+            prod: {
+                title,
                 description,
                 price
             },
@@ -90,7 +105,8 @@ exports.getProducts = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
     const { productId } = req.params
     const errors = validationResult(req)
-    const { title, imageURL, description, price } = req.body
+    const { title, description, price } = req.body
+    const imageURL = req.file?.path
     if (!errors.isEmpty()) {
         return  res.render('admin/edit-product', {
             pageTitle: 'Edit Product',
@@ -99,7 +115,6 @@ exports.updateProduct = async (req, res, next) => {
             hasError: true,
             prod: {
                 title,
-                imageURL,
                 description,
                 price,
                 _id: productId
@@ -109,12 +124,21 @@ exports.updateProduct = async (req, res, next) => {
             validErrors: errors.array()
         })
     }
-    await Product.updateOne({ _id: productId, userId: req.user._id }, { title, imageURL, description, price })
+    if (imageURL) {
+        const productFind = await Product.findById(productId)
+        fileHelper.deleteFile(productFind.imageURL)
+        await Product.updateOne({ _id: productId, userId: req.user._id }, { title, imageURL, description, price })
+    } else {
+        await Product.updateOne({ _id: productId, userId: req.user._id }, { title, description, price })
+    }
+
     res.redirect('/')
 }
 //
 exports.deleteProduct = async (req, res, next) => {
     const { productId } = req.params
+    const productFind = await Product.findById(productId)
+    fileHelper.deleteFile(productFind.imageURL)
     await Product.deleteOne({ _id: productId, userId: req.user._id })
     res.redirect('/admin/products')
 }

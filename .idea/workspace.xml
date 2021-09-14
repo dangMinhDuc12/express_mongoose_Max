@@ -2,20 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="34522a3d-3ede-4f52-893b-a71fe54a57c2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/views/error.ejs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/admin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/shop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/imageURL-1631536366381-822441280" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/imageURL-1631536383020-937247826" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/admin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/404.ejs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/admin/edit-product.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/admin/edit-product.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/shop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/admin/products.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/admin/products.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/shop/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/shop/index.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/shop/orders.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/shop/orders.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/shop/product-detail.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/shop/product-detail.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/shop/product-list.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/shop/product-list.ejs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -30,12 +42,13 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/mi-btech-web" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Code\learn_nodejs\express_mongoose\data\invoices" />
       <recent name="D:\Code\learn_nodejs\express_mongoose\views\auth" />
       <recent name="D:\Code\learn_nodejs\express_mongodb\public\css" />
     </key>
@@ -69,7 +82,8 @@
       <workItem from="1631414213972" duration="7545000" />
       <workItem from="1631491509338" duration="8000" />
       <workItem from="1631491518291" duration="143000" />
-      <workItem from="1631525472884" duration="8365000" />
+      <workItem from="1631525472884" duration="8451000" />
+      <workItem from="1631613172240" duration="9154000" />
     </task>
     <servers />
   </component>

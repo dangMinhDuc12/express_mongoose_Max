@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        cb(null, file.fieldname + '-' + uniqueSuffix)
+        cb(null, uniqueSuffix + '-' + file.originalname )
     }
 })
 
@@ -63,6 +63,7 @@ app.use(session({
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static(path.join(__dirname, 'public')))
+app.use('/images',express.static(path.join(__dirname, 'images')))
 
 app.use(multer({ storage, fileFilter }).single('imageURL') )
 

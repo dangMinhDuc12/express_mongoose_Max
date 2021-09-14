@@ -1,5 +1,8 @@
 const Product = require('../models/product')
 const Order = require('../models/order')
+const fs = require('fs')
+const path = require('path')
+const PDFDocument = require('pdfkit');
 
 exports.getProducts = async (req, res, next) => {
     //sendFile: gửi 1 file đến đường dẫn bên trong hàm, dirname: folder hiện tại
@@ -92,4 +95,50 @@ exports.postOrders = async (req, res, next) => {
     await order.save()
     await req.user.clearCart()
     res.redirect('/orders')
+}
+
+module.exports.getInvoice = async (req, res, next) => {
+    const { orderId } = req.params
+    const invoiceName = `invoice-${orderId}.pdf`
+    const invoicePath = path.join(path.dirname(require.main.filename), 'data', 'invoices', invoiceName)
+    const orderFind = await Order.findById(orderId)
+    // if (!orderFind) {
+    //     return next(new Error('No order found'))
+    // }
+    // if (orderFind.userId.toString() !== req.user._id.toString()) {
+    //     return next(new Error('Unauthorized'))
+    // }
+    // fs.readFile(invoicePath, (err, data) => {
+    //     if (err) {
+    //         return next(err)
+    //     }
+    //     res.setHeader('Content-Type', 'application/pdf')
+    //     res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`)
+    //     res.send(data)
+    // })
+
+    //Tạo ra 1 page stream để stream file, preload data, chưa cho download vội
+    // const file = fs.createReadStream(invoicePath)
+    // res.setHeader('Content-Type', 'application/pdf')
+    // res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`)
+    // file.pipe(res)
+
+    //Tạo file pdf với pdf kit
+    const doc = new PDFDocument()
+    res.setHeader('Content-Type', 'application/pdf')
+    res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`)
+    doc.pipe(fs.createWriteStream(invoicePath))
+    doc.pipe(res)
+    doc.fontSize(26).text('Invoice', {
+        underline: true
+    })
+    doc.text('------------------------------')
+    let totalPrice = 0
+    orderFind.products.forEach(prod => {
+        totalPrice +=  prod.quantity * prod.product.price
+        doc.fontSize(14).text(`${prod.product.title} - ${prod.quantity} x ${prod.product.price} mil €`)
+    })
+    doc.text('------------------------------')
+    doc.fontSize(20).text(`Total Price: ${totalPrice} mil €`)
+    doc.end()
 }

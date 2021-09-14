@@ -20,6 +20,8 @@ router.delete('/cart-delete-item/:productId',isAuth, shopController.deleteCartPr
 router.get('/orders', isAuth,shopController.getOrders)
 // //
 router.post('/create-order', isAuth,shopController.postOrders)
+
+router.get('/order/:orderId', isAuth, shopController.getInvoice)
 // //
 // router.get('/checkout', shopController.getCheckout)
 
