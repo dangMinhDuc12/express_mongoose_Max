@@ -3,18 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="34522a3d-3ede-4f52-893b-a71fe54a57c2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/admin.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/shop.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/imageURL-1631536366381-822441280" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/imageURL-1631536383020-937247826" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/main.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/shop.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/shop.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/admin/products.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/admin/products.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/shop/cart.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/shop/cart.ejs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/shop/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/shop/index.ejs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/shop/orders.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/shop/orders.ejs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/shop/product-detail.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/shop/product-detail.ejs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/shop/product-list.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/shop/product-list.ejs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -42,7 +39,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/mi-btech-web" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -83,7 +80,9 @@
       <workItem from="1631491509338" duration="8000" />
       <workItem from="1631491518291" duration="143000" />
       <workItem from="1631525472884" duration="8451000" />
-      <workItem from="1631613172240" duration="9154000" />
+      <workItem from="1631613172240" duration="9664000" />
+      <workItem from="1631664225350" duration="11000" />
+      <workItem from="1631700486564" duration="8696000" />
     </task>
     <servers />
   </component>

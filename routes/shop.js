@@ -19,10 +19,14 @@ router.delete('/cart-delete-item/:productId',isAuth, shopController.deleteCartPr
 // //
 router.get('/orders', isAuth,shopController.getOrders)
 // //
-router.post('/create-order', isAuth,shopController.postOrders)
+// router.post('/create-order', isAuth,shopController.postOrders)
 
 router.get('/order/:orderId', isAuth, shopController.getInvoice)
 // //
-// router.get('/checkout', shopController.getCheckout)
+router.get('/checkout', shopController.getCheckout)
+
+router.get('/checkout/success', shopController.postOrders)
+
+router.get('/checkout/cancel', shopController.getCheckout)
 
 module.exports = router

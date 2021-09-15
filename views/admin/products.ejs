@@ -35,6 +35,7 @@
             })
             %>
         </div>
+        <%- include('../includes/pagination', { currentPage: currentPage, prePage: prePage, hasPrePage: hasPrePage, nextPage: nextPage, lastPage: lastPage, hasNextPage: hasNextPage  }) %>
     <%
     } else {
     %>

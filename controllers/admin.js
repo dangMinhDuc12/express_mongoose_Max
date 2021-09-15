@@ -2,6 +2,7 @@ const Product = require("../models/product");
 const { validationResult } = require('express-validator')
 const mongoose = require('mongoose')
 const fileHelper = require('../ulti/file')
+const ITEM_PER_PAGE = 1
 
 exports.getAddProduct = (req, res, next) => {
     res.render('admin/edit-product', {
@@ -88,9 +89,10 @@ exports.addProduct = async (req, res, next) => {
 }
 
 exports.getProducts = async (req, res, next) => {
-
+    const  page  = Number(req.query.page) || 1
+    const numProducts = await Product.find().estimatedDocumentCount()
     //relationship
-    const products = await Product.find({ userId: req.user._id })
+    const products = await Product.find({ userId: req.user._id }).skip((page - 1) * ITEM_PER_PAGE).limit(ITEM_PER_PAGE)
         res.render('admin/products', {
             prods: products,
             pageTitle: 'Admin Products',
@@ -98,7 +100,13 @@ exports.getProducts = async (req, res, next) => {
             hasProducts: products.length > 0,
             activeShop: true,
             productCSS: true,
-            isAuth: req.session.isAuth
+            isAuth: req.session.isAuth,
+            currentPage: page,
+            hasNextPage: page * ITEM_PER_PAGE < numProducts,
+            hasPrePage: page > 1,
+            nextPage: page + 1,
+            prePage: page - 1,
+            lastPage: Math.ceil(numProducts / ITEM_PER_PAGE)
         })
 }
 //

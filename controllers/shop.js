@@ -2,11 +2,15 @@ const Product = require('../models/product')
 const Order = require('../models/order')
 const fs = require('fs')
 const path = require('path')
-const PDFDocument = require('pdfkit');
+const PDFDocument = require('pdfkit')
+const ITEM_PER_PAGE = 1
+const stripe = require('stripe')('sk_test_51JZxAbJzdm9oGD68p8ds7DAxlKZSOuDezv9xbbXjmp6rq3soT2UtnrZifmV5BiAX5JE35iKbDtw5JBQjuJH8DklF002vimLhTN')
 
 exports.getProducts = async (req, res, next) => {
     //sendFile: gửi 1 file đến đường dẫn bên trong hàm, dirname: folder hiện tại
-    const products = await Product.find({})
+    const  page  = Number(req.query.page) || 1
+    const numProducts = await Product.find().estimatedDocumentCount()
+    const products = await Product.find({}).skip((page - 1) * ITEM_PER_PAGE).limit(ITEM_PER_PAGE)
 
          res.render('shop/product-list', {
              prods: products,
@@ -15,7 +19,13 @@ exports.getProducts = async (req, res, next) => {
              hasProducts: products.length > 0,
              activeShop: true,
              productCSS: true,
-             isAuth: req.session.isAuth
+             isAuth: req.session.isAuth,
+             currentPage: page,
+             hasNextPage: page * ITEM_PER_PAGE < numProducts,
+             hasPrePage: page > 1,
+             nextPage: page + 1,
+             prePage: page - 1,
+             lastPage: Math.ceil(numProducts / ITEM_PER_PAGE)
          })
 
 }
@@ -33,7 +43,9 @@ exports.getProduct = async (req, res, next) => {
 
 
 exports.getIndex = async (req, res, next) => {
-    const products = await Product.find({})
+    const  page  = Number(req.query.page) || 1
+    const numProducts = await Product.find().estimatedDocumentCount()
+    const products = await Product.find({}).skip((page - 1) * ITEM_PER_PAGE).limit(ITEM_PER_PAGE)
         res.render('shop/index', {
             prods: products,
             pageTitle: 'Shop',
@@ -41,7 +53,13 @@ exports.getIndex = async (req, res, next) => {
             hasProducts: products.length > 0,
             activeShop: true,
             productCSS: true,
-            isAuth: req.session.isAuth
+            isAuth: req.session.isAuth,
+            currentPage: page,
+            hasNextPage: page * ITEM_PER_PAGE < numProducts,
+            hasPrePage: page > 1,
+            nextPage: page + 1,
+            prePage: page - 1,
+            lastPage: Math.ceil(numProducts / ITEM_PER_PAGE)
         })
 
 }
@@ -141,4 +159,33 @@ module.exports.getInvoice = async (req, res, next) => {
     doc.text('------------------------------')
     doc.fontSize(20).text(`Total Price: ${totalPrice} mil €`)
     doc.end()
+}
+
+module.exports.getCheckout = async (req, res, next) => {
+    const userWithProduct = await req.user.populate('cart.items.productId')
+    const cartProducts = userWithProduct.cart.items
+    const totalSum = cartProducts.reduce((acc, prod) => {
+            acc += prod.quantity * prod.productId.price
+            return acc
+    }, 0)
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: cartProducts.map(p => ({
+            name: p.productId.title,
+            description: p.productId.description,
+            amount: p.productId.price,
+            currency: 'usd',
+            quantity: p.quantity
+        })),
+        success_url: `${req.protocol}://${req.get('host')}/checkout/success`,
+        cancel_url: `${req.protocol}://${req.get('host')}/checkout/cancel`
+    })
+    res.render('shop/checkout', {
+        path: '/checkout',
+        pageTitle: 'Chechout',
+        products: cartProducts,
+        isAuth: req.session.isAuth,
+        totalSum,
+        sessionId: session.id
+    })
 }
