@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path')
 const PDFDocument = require('pdfkit')
 const ITEM_PER_PAGE = 1
-const stripe = require('stripe')('sk_test_51JZxAbJzdm9oGD68p8ds7DAxlKZSOuDezv9xbbXjmp6rq3soT2UtnrZifmV5BiAX5JE35iKbDtw5JBQjuJH8DklF002vimLhTN')
+const stripe = require('stripe')(process.env.STRIPE_KEY)
 
 exports.getProducts = async (req, res, next) => {
     //sendFile: gửi 1 file đến đường dẫn bên trong hàm, dirname: folder hiện tại

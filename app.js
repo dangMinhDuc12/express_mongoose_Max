@@ -115,7 +115,7 @@ app.use((err, req, res, next) => {
     try {
         await mongoose.connect(process.env.MONGODB_URI)
         console.log('connected to db')
-        app.listen(3000)
+        app.listen(process.env.PORT || 3000)
     } catch (e) {
         console.log(e)
     }

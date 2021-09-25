@@ -142,7 +142,7 @@ module.exports.getReset = (req, res, next) => {
 
 }
 
-module.exports.postReset = (req, res, next) => {
+module.exports.postReset = async (req, res, next) => {
     const { email } = req.body
     crypto.randomBytes(32, async (err, buffer) => {
         if (err) {
